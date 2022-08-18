@@ -7,7 +7,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 
-public class SocketService implements Closeable {
+public class SocketService implements ISocketService {
 
     private final Socket socket;
 
@@ -15,6 +15,7 @@ public class SocketService implements Closeable {
         this.socket = socket;
     }
 
+    @Override
     public Deque<String> readRequest() {
         try {
             BufferedReader input = new BufferedReader(
@@ -35,6 +36,7 @@ public class SocketService implements Closeable {
         }
     }
 
+    @Override
     public void writeResponse(String rawResponse) {
         try {
             PrintWriter output = new PrintWriter(socket.getOutputStream());

@@ -2,29 +2,41 @@ package ru.geekbrains;
 
 import ru.geekbrains.domain.HttpRequest;
 
-import java.util.Deque;
+import java.util.*;
 
-public class RequestParser {
+public class RequestParser implements IRequestParser{
 
+    public static RequestParser getInstance(){
+        return new RequestParser();
+    }
+
+    private RequestParser(){
+    }
+
+    @Override
     public HttpRequest parse(Deque<String> rawRequest) {
-        HttpRequest httpRequest = new HttpRequest();
         String[] firstLine = rawRequest.pollFirst().split(" ");
-        httpRequest.setMethod(firstLine[0]);
-        httpRequest.setUrl(firstLine[1]);
-
+        Map<String,String> headers = new HashMap<>();
         while (!rawRequest.isEmpty()) {
             String line = rawRequest.pollFirst();
             if (line.isBlank()) {
                 break;
             }
             String[] header = line.split(": ");
-            httpRequest.getHeaders().put(header[0], header[1]);
+            headers.put(header[0], header[1]);
         }
         StringBuilder sb = new StringBuilder();
         while (!rawRequest.isEmpty()) {
             sb.append(rawRequest.pollFirst());
         }
-        httpRequest.setBody(sb.toString());
-        return httpRequest;
+
+        return HttpRequest.createHttpRequest()
+                .addMethod(firstLine[0])
+                .addUrl(firstLine[1])
+                .addHeaders(headers)
+                .addBody(sb.toString())
+                .build();
     }
+
+
 }

@@ -3,23 +3,33 @@ package ru.geekbrains;
 import ru.geekbrains.domain.HttpRequest;
 import ru.geekbrains.domain.HttpResponse;
 import ru.geekbrains.service.FileService;
+import ru.geekbrains.service.IFileService;
+import ru.geekbrains.service.ISocketService;
 import ru.geekbrains.service.SocketService;
 
 import java.io.IOException;
 import java.util.Deque;
+import java.util.HashMap;
 
 public class RequestHandler implements Runnable {
 
-    private final SocketService socketService;
-
-    private final FileService fileService;
-    private final RequestParser requestParser;
+    private final ISocketService socketService;
+    private final IFileService fileService;
+    private final IRequestParser requestParser;
     private final ResponseSerializer responseSerializer;
 
-    public RequestHandler(SocketService socketService,
-                          FileService fileService,
-                          RequestParser requestParser,
-                          ResponseSerializer responseSerializer) {
+    public static RequestHandler getInstance(ISocketService socketService,
+                                             IFileService fileService,
+                                             IRequestParser requestParser,
+                                             ResponseSerializer responseSerializer) {
+
+        return new RequestHandler(socketService, fileService, requestParser, responseSerializer);
+    }
+
+    private RequestHandler(ISocketService socketService,
+                           IFileService fileService,
+                           IRequestParser requestParser,
+                           ResponseSerializer responseSerializer) {
         this.socketService = socketService;
         this.fileService = fileService;
         this.requestParser = requestParser;
@@ -32,19 +42,25 @@ public class RequestHandler implements Runnable {
         HttpRequest req = requestParser.parse(rawRequest);
 
         if (!fileService.exists(req.getUrl())) {
-            HttpResponse resp = new HttpResponse();
-            resp.setStatusCode(404);
-            resp.setStatusCodeName("NOT_FOUND");
-            resp.getHeaders().put("Content-Type", "text/html; charset=utf-8");
+            HttpResponse resp = HttpResponse.createHttpResponse()
+                    .addStatus(404)
+                    .addStatusCodeName("NOT_FOUND")
+                    .addHeaders(new HashMap<>() {{
+                        put("Content-Type", "text/html; charset=utf-8");
+                    }})
+                    .build();
             socketService.writeResponse(responseSerializer.serialize(resp));
             return;
         }
 
-        HttpResponse resp = new HttpResponse();
-        resp.setStatusCode(200);
-        resp.setStatusCodeName("OK");
-        resp.getHeaders().put("Content-Type", "text/html; charset=utf-8");
-        resp.setBody(fileService.readFile(req.getUrl()));
+        HttpResponse resp = HttpResponse.createHttpResponse()
+                .addStatus(200)
+                .addStatusCodeName("OK")
+                .addHeaders(new HashMap<>() {{
+                    put("Content-Type", "text/html; charset=utf-8");
+                }})
+                .addBody(fileService.readFile(req.getUrl()))
+                .build();
         socketService.writeResponse(responseSerializer.serialize(resp));
 
         try {
