@@ -5,6 +5,8 @@ import java.util.Map;
 
 public class HttpRequest {
 
+    private HttpRequestBuilder HttpRequestBuilder;
+
     private String method;
 
     private String url;
@@ -23,35 +25,58 @@ public class HttpRequest {
         this.body = body;
     }
 
-    public String getMethod() {
-        return method;
+    public static HttpRequestBuilder createHttpRequest() {
+        return new HttpRequestBuilder();
     }
 
-    public void setMethod(String method) {
-        this.method = method;
+    public static class HttpRequestBuilder {
+
+        private final HttpRequest httpRequest;
+
+        private HttpRequestBuilder() {
+            httpRequest = new HttpRequest();
+        }
+
+        public HttpRequestBuilder addMethod(String method) {
+            this.httpRequest.method = method;
+            return this;
+        }
+
+        public HttpRequestBuilder addUrl(String url) {
+            this.httpRequest.url = url;
+            return this;
+        }
+
+        public HttpRequestBuilder addHeaders(Map<String, String> headers) {
+            this.httpRequest.headers = headers;
+            return this;
+        }
+
+        public HttpRequestBuilder addBody(String body) {
+            this.httpRequest.body = body;
+            return this;
+        }
+
+        public HttpRequest build() {
+            return httpRequest;
+        }
+
+    }
+
+    public String getMethod() {
+        return method;
     }
 
     public String getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     public Map<String, String> getHeaders() {
         return headers;
-    }
-
-    public void setHeaders(Map<String, String> headers) {
-        this.headers = headers;
     }
 
     public String getBody() {
         return body;
     }
 
-    public void setBody(String body) {
-        this.body = body;
-    }
 }

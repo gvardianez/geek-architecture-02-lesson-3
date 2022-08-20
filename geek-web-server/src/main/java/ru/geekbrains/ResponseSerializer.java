@@ -2,8 +2,16 @@ package ru.geekbrains;
 
 import ru.geekbrains.domain.HttpResponse;
 
-public class ResponseSerializer {
+public class ResponseSerializer implements IResponseSerializer{
 
+    public static ResponseSerializer getInstance(){
+        return new ResponseSerializer();
+    }
+
+    private ResponseSerializer(){
+    }
+
+    @Override
     public String serialize(HttpResponse response) {
         StringBuilder sb = new StringBuilder();
         sb.append("HTTP/1.1 " + response.getStatusCode() + " " + response.getStatusCodeName() + "\n");

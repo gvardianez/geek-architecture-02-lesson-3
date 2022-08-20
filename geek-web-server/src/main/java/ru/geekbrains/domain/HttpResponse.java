@@ -16,35 +16,57 @@ public class HttpResponse {
     public HttpResponse() {
     }
 
-    public int getStatusCode() {
-        return statusCode;
+    public static HttpResponseBuilder createHttpResponse() {
+        return new HttpResponseBuilder();
     }
 
-    public void setStatusCode(int statusCode) {
-        this.statusCode = statusCode;
+    public static class HttpResponseBuilder {
+
+        private final HttpResponse httpResponse;
+
+        private HttpResponseBuilder() {
+           httpResponse = new HttpResponse();
+        }
+
+        public HttpResponseBuilder addStatus(int status) {
+            this.httpResponse.statusCode = status;
+            return this;
+        }
+
+        public HttpResponseBuilder addStatusCodeName(String statusCodeName) {
+            this.httpResponse.statusCodeName = statusCodeName;
+            return this;
+        }
+
+        public HttpResponseBuilder addHeaders(Map<String, String> headers) {
+            this.httpResponse.headers = headers;
+            return this;
+        }
+
+        public HttpResponseBuilder addBody(String body) {
+            this.httpResponse.body = body;
+            return this;
+        }
+
+        public HttpResponse build() {
+            return httpResponse;
+        }
+
+    }
+
+    public int getStatusCode() {
+        return statusCode;
     }
 
     public Map<String, String> getHeaders() {
         return headers;
     }
 
-    public void setHeaders(Map<String, String> headers) {
-        this.headers = headers;
-    }
-
     public String getBody() {
         return body;
     }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
-
     public String getStatusCodeName() {
         return statusCodeName;
     }
 
-    public void setStatusCodeName(String statusCodeName) {
-        this.statusCodeName = statusCodeName;
-    }
 }
