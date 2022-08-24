@@ -1,11 +1,9 @@
-package ru.geekbrains.domain;
+package ru.geekbrains.domain.request;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class HttpRequest {
-
-    private HttpRequestBuilder HttpRequestBuilder;
+public class HttpRequest implements Request {
 
     private String method;
 
@@ -63,18 +61,23 @@ public class HttpRequest {
 
     }
 
+
+    @Override
     public String getMethod() {
         return method;
     }
 
+    @Override
     public String getUrl() {
         return url;
     }
 
+    @Override
     public Map<String, String> getHeaders() {
         return headers;
     }
 
+    @Override
     public String getBody() {
         return body;
     }
