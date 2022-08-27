@@ -1,68 +1,38 @@
 package ru.geekbrains;
 
-import ru.geekbrains.domain.HttpRequest;
-import ru.geekbrains.domain.HttpResponse;
-import ru.geekbrains.service.FileService;
-import ru.geekbrains.service.IFileService;
+import ru.geekbrains.domain.request.HttpRequest;
+import ru.geekbrains.handler.MethodHandler;
 import ru.geekbrains.service.ISocketService;
-import ru.geekbrains.service.SocketService;
 
 import java.io.IOException;
 import java.util.Deque;
-import java.util.HashMap;
 
 public class RequestHandler implements Runnable {
 
     private final ISocketService socketService;
-    private final IFileService fileService;
     private final IRequestParser requestParser;
-    private final ResponseSerializer responseSerializer;
+    private final MethodHandler methodHandler;
 
     public static RequestHandler getInstance(ISocketService socketService,
-                                             IFileService fileService,
                                              IRequestParser requestParser,
-                                             ResponseSerializer responseSerializer) {
+                                             MethodHandler methodHandler) {
 
-        return new RequestHandler(socketService, fileService, requestParser, responseSerializer);
+        return new RequestHandler(socketService, requestParser, methodHandler);
     }
 
     private RequestHandler(ISocketService socketService,
-                           IFileService fileService,
                            IRequestParser requestParser,
-                           ResponseSerializer responseSerializer) {
+                           MethodHandler methodHandler) {
         this.socketService = socketService;
-        this.fileService = fileService;
         this.requestParser = requestParser;
-        this.responseSerializer = responseSerializer;
+        this.methodHandler = methodHandler;
     }
 
     @Override
     public void run() {
         Deque<String> rawRequest = socketService.readRequest();
         HttpRequest req = requestParser.parse(rawRequest);
-
-        if (!fileService.exists(req.getUrl())) {
-            HttpResponse resp = HttpResponse.createHttpResponse()
-                    .addStatus(404)
-                    .addStatusCodeName("NOT_FOUND")
-                    .addHeaders(new HashMap<>() {{
-                        put("Content-Type", "text/html; charset=utf-8");
-                    }})
-                    .build();
-            socketService.writeResponse(responseSerializer.serialize(resp));
-            return;
-        }
-
-        HttpResponse resp = HttpResponse.createHttpResponse()
-                .addStatus(200)
-                .addStatusCodeName("OK")
-                .addHeaders(new HashMap<>() {{
-                    put("Content-Type", "text/html; charset=utf-8");
-                }})
-                .addBody(fileService.readFile(req.getUrl()))
-                .build();
-        socketService.writeResponse(responseSerializer.serialize(resp));
-
+        methodHandler.handle(req);
         try {
             socketService.close();
         } catch (IOException ex) {

@@ -1,4 +1,4 @@
-package ru.geekbrains.domain.request;
+package ru.geekbrains.domain.request.decorator;
 
 public class RequestFactory {
 
