@@ -1,18 +1,18 @@
-package ru.geekbrains.domain.request;
+package ru.geekbrains.domain.request.decorator;
 
 import java.util.Map;
 
-public class PostHttpRequest implements Request {
+public class GetHttpRequest implements Request{
 
     private final Request request;
 
-    public PostHttpRequest(Request request) {
+    public GetHttpRequest(Request request) {
         this.request = request;
     }
 
     @Override
     public String getMethod() {
-        return Method.POST.toString();
+        return Method.GET.toString();
     }
 
     @Override
@@ -29,5 +29,4 @@ public class PostHttpRequest implements Request {
     public String getBody() {
         return request.getBody();
     }
-
 }

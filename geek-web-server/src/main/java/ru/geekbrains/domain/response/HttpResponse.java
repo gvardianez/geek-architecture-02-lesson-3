@@ -1,4 +1,4 @@
-package ru.geekbrains.domain;
+package ru.geekbrains.domain.response;
 
 import java.util.HashMap;
 import java.util.Map;

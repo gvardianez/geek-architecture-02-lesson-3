@@ -2,7 +2,7 @@ package ru.geekbrains;
 
 import org.junit.Assert;
 import org.junit.Test;
-import ru.geekbrains.domain.HttpRequest;
+import ru.geekbrains.domain.request.decorator.Request;
 
 import java.util.Deque;
 import java.util.LinkedList;
@@ -21,7 +21,7 @@ public class RequestParserTest {
     public void testParsing() {
         Deque<String> raw = new LinkedList<>();
         rawTestRequest.lines().forEach(raw::add);
-        HttpRequest req = requestParser.parse(raw);
+       Request req = requestParser.parse(raw);
 
         Assert.assertEquals("GET", req.getMethod());
     }

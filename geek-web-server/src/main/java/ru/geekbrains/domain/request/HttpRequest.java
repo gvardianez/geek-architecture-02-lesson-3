@@ -1,5 +1,7 @@
 package ru.geekbrains.domain.request;
 
+import ru.geekbrains.domain.request.decorator.Request;
+
 import java.util.HashMap;
 import java.util.Map;
 

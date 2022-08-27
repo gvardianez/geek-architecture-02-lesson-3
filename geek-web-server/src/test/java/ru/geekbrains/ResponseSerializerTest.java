@@ -2,7 +2,7 @@ package ru.geekbrains;
 
 import org.junit.Assert;
 import org.junit.Test;
-import ru.geekbrains.domain.HttpResponse;
+import ru.geekbrains.domain.response.HttpResponse;
 
 import java.util.HashMap;
 
