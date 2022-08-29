@@ -1,7 +1,6 @@
 package ru.geekbrains.handler;
 
 import ru.geekbrains.IResponseSerializer;
-import ru.geekbrains.config.ServerConfig;
 import ru.geekbrains.domain.request.HttpRequest;
 import ru.geekbrains.domain.response.HttpResponse;
 import ru.geekbrains.service.ISocketService;
@@ -16,15 +15,11 @@ public abstract class MethodHandlerImpl implements MethodHandler {
 
     protected final IResponseSerializer responseSerializer;
 
-    protected final ServerConfig config;
-
-
-    public MethodHandlerImpl(String method, MethodHandler handler, ISocketService socketService, IResponseSerializer responseSerializer, ServerConfig config) {
+    public MethodHandlerImpl(String method, MethodHandler handler, ISocketService socketService, IResponseSerializer responseSerializer) {
         this.method = method;
         this.nextHandler = handler;
         this.socketService = socketService;
         this.responseSerializer = responseSerializer;
-        this.config = config;
     }
 
     @Override
