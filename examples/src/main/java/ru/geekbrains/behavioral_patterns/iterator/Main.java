@@ -39,5 +39,10 @@ public class Main {
         }
 
 
+        RandomIntegersIterator randomIntegersIterator = new RandomIntegersIterator(10);
+        for (Integer integer : randomIntegersIterator) {
+            System.out.println(integer);
+        }
+
     }
 }
