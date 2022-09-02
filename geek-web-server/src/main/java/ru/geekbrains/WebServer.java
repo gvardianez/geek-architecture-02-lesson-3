@@ -28,7 +28,6 @@ public class WebServer {
                         RequestParser.getInstance(),
                         MethodHandlerFactory.createAnnotation(socketService,
                                 ResponseSerializer.getInstance(),
-                                config,
                                 FileServiceFactory.create(config.getWww())))
                 ).start();
             }

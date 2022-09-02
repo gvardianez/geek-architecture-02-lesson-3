@@ -1,7 +1,6 @@
 package ru.geekbrains.handler;
 
 import ru.geekbrains.IResponseSerializer;
-import ru.geekbrains.config.ServerConfig;
 import ru.geekbrains.domain.request.HttpRequest;
 import ru.geekbrains.domain.request.decorator.Method;
 import ru.geekbrains.domain.response.HttpResponse;
@@ -18,9 +17,8 @@ public class GetMethodHandler extends MethodHandlerImpl {
     public GetMethodHandler(MethodHandler handler,
                             ISocketService socketService,
                             IResponseSerializer responseSerializer,
-                            ServerConfig config,
                             IFileService fileService) {
-        super(Method.GET.toString(), handler, socketService, responseSerializer, config);
+        super(Method.GET.toString(), handler, socketService, responseSerializer);
         this.fileService = fileService;
     }
 
